@@ -39,6 +39,13 @@ def list_remove_and_return(list_, target):
     list_.remove(target)
     return list_
 
+def score_board(result):
+    winning_board         = result[0]
+    winning_board_numbers = [n for row in winning_board.rows  for n in row ]
+    winning_board_mask    = [m for mrow in winning_board.mask for m in mrow]
+    last_called_number    = result[1]
+    print(last_called_number * sum([winning_board_numbers[i] * winning_board_mask[i] for i in range(len(winning_board_numbers))]))
+
 def main():
     input_data     = open("input.txt").read().splitlines()
     called_numbers = [int(i) for i in input_data[0].split(",")]
@@ -47,29 +54,19 @@ def main():
 
     for line in input_data[2:]:
         if not line == "":
-            new_line = re.sub("  ", " ", line)
-            new_line = re.sub("^ ", "0", new_line)
-            temp_board.append([int(i) for i in new_line.split(" ")])
+            temp_board.append([int(i) for i in line.split()])
         else:
             bingo_boards.append(bingo_board(temp_board))
             temp_board = []
 
     # get the score of the first winning board
-    result                = play_bingo(bingo_boards, called_numbers)
-    winning_board         = result[0]
-    winning_board_numbers = [n for row in winning_board.rows  for n in row ]
-    winning_board_mask    = [m for mrow in winning_board.mask for m in mrow]
-    last_called_number    = result[1]
-    print(last_called_number * sum([winning_board_numbers[i] * winning_board_mask[i] for i in range(len(winning_board_numbers))]))
+    result = play_bingo(bingo_boards, called_numbers)
+    score_board(result)
 
     # get the score of the last winning board (to let the squid win)
     while len(bingo_boards)>1:
         result = play_bingo(list_remove_and_return(bingo_boards, result[0]), called_numbers[called_numbers.index(result[1]):])
-    winning_board         = result[0]
-    winning_board_numbers = [n for row in winning_board.rows  for n in row ]
-    winning_board_mask    = [m for mrow in winning_board.mask for m in mrow]
-    last_called_number    = result[1]
-    print(last_called_number * sum([winning_board_numbers[i] * winning_board_mask[i] for i in range(len(winning_board_numbers))]))
+    score_board(result)
 
 if __name__ == "__main__":
     main()
