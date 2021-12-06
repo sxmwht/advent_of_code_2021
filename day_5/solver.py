@@ -32,15 +32,13 @@ dg_lines = [line for line in lines if abs(int(line[0][0]) - int(line[1][0])) == 
 
 # plot lines
 for line in hv_lines:
-    expanded_line_x, expanded_line_y = expand_line(line)
-    for i in range(len(expanded_line_x)):
-        grid[expanded_line_y[i]][expanded_line_x[i]] += 1
+    for x,y in zip(*expand_line(line)):
+        grid[y][x] += 1
 
 print(len([p for row in grid for p in row if p >= 2]))
 
 for line in dg_lines:
-    expanded_line_x, expanded_line_y = expand_line(line)
-    for i in range(len(expanded_line_x)):
-        grid[expanded_line_y[i]][expanded_line_x[i]] += 1
+    for x,y in zip(*expand_line(line)):
+        grid[y][x] += 1
 
 print(len([p for row in grid for p in row if p >= 2]))
