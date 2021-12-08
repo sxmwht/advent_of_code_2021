@@ -32,9 +32,7 @@ segments_for_each_digit = [0]*10
 
 output = 0
 for i, line in enumerate(input_digits):
-    inputs = list(map(list, [d for d in line]))
-    for d in inputs:
-        d.sort()
+    inputs = list(map(lambda x: sorted(list(x)), [d for d in line]))
     for digit in inputs:
         if len(digit) == 2:
             segments_for_each_digit[1] = digit
@@ -61,10 +59,9 @@ for i, line in enumerate(input_digits):
         else:
             segments_for_each_digit[6]  = digit
 
-    outputs = list(map(list, [d for d in output_values[i]]))
+    outputs = list(map(lambda x: sorted(list(x)), [d for d in output_values[i]]))
     output_list = []
     for o in outputs:
-        o.sort()
         output_list.append(segments_for_each_digit.index(o))
     output += int("".join(list(map(str, output_list))))
 
