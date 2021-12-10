@@ -1,14 +1,13 @@
 #!/usr/bin/env python
 
-def is_minimum(point, grid):
-    return all([grid[y][x] > grid[point.y][point.x] for x,y in get_adjacent_points(point, grid)])
-
 class point:
     def __init__(self, x, y, val):
         self.x = x
         self.y = y
         self.val = val
         self.adjacent_points = None
+    def is_minimum(self):
+        return all([point.val > self.val for point in self.adjacent_points])
 
 class grid:
     def __init__(self, input_grid):
@@ -44,7 +43,7 @@ if __name__ == "__main__":
     grid_ = grid(input_)
     grid_.get_all_adjacent_points()
 
-    print(grid_.contents[0][1].val)
-    print([point.val for point in grid_.contents[0][0].adjacent_points])
-    grid_.contents[0][1].val = 3
-    print([point.val for point in grid_.contents[0][0].adjacent_points])
+    # part 1
+    print(sum([point.val+1 for row in grid_.contents for point in row if point.is_minimum()]))
+
+    # part 2
