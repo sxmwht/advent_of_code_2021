@@ -14,9 +14,9 @@ class grid:
         self.width  = len(input_grid[0])
         self.height = len(input_grid)
         self.contents = []
-        for y in range(len(input_)):
+        for y in range(len(input_grid)):
             self.contents.append([])
-            for x in range(len(input_[0])):
+            for x in range(len(input_grid[0])):
                 self.contents[-1].append(point(x,y,input_grid[y][x]))
 
     def get_adjacent_points(self, point):
