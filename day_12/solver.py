@@ -6,20 +6,36 @@ class node:
         self.is_small = name == name.lower()
         self.linked_nodes = []
 
-def find_path(node, source_node, visited_nodes):
+def find_path(node, source_node, visited_nodes, part):
     if node.name == "end":
         return node.name
     else:
         vc = visited_nodes.copy()
         vc.append(node)
 
-        legal_nodes = [ln for ln in node.linked_nodes if not(ln.is_small and ln in vc)]
+        legal_nodes = [ln for ln in node.linked_nodes if 
+                not ln.name == "start"]
 
         if legal_nodes != []:
             rc = []
             vn = vc.copy()
             for ln in legal_nodes:
-                paths = find_path(ln, node, vn)
+                if part == 1:
+                    if ln.is_small and ln in vn:
+                        continue
+                elif part == 2:
+                    if ln.is_small and ln.name != "end" and ln in vn:
+                        # get all the small nodes in the list of ones we've visited
+                        small_nodes = [n for n in vn if n.is_small]
+                        been_to_a_small_node_twice = False
+                        for sn in small_nodes:
+                            if vn.count(sn) > 1:
+                                been_to_a_small_node_twice = True
+                                break
+                        if been_to_a_small_node_twice:
+                            continue
+
+                paths = find_path(ln, node, vn, part)
                 if type(paths) == str:
                     rc.append([node.name, paths])
                 else:
@@ -43,15 +59,18 @@ if __name__ == "__main__":
                 if existing_node.name == n:
                     existing_node.linked_nodes += [node for node in nodes if node.name == line_nodes[abs(i-1)]]
 
-    for node in nodes:
-        print(node.name, [n.name for n in node.linked_nodes])
+#    for node in nodes:
+#        print(node.name, [n.name for n in node.linked_nodes])
 
     print()
-    print()
 
-    paths = [find_path(n, None, []) for n in nodes if n.name == "start"][0]
-    for p in [",".join(p) for p in paths if p[-1] == "end"]:
-        print(p)
+    # part 1
+    paths = [find_path(n, None, [], 1) for n in nodes if n.name == "start"][0]
     print(len([p for p in paths if p[-1] == "end"]))
+
+    # part 2
+    paths = [find_path(n, None, [], 2) for n in nodes if n.name == "start"][0]
+    print(len([p for p in paths if p[-1] == "end"]))
+
 
 
