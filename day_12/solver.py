@@ -7,20 +7,28 @@ class node:
         self.linked_nodes = []
 
 def find_path(node, source_node, visited_nodes):
-    print(node.name, [f.name for f in node.linked_nodes])
-    visited_nodes.append(node)
-    print(node.name)
-    if source_node != None:
-        print(source_node.name)
+    if node.name == "end":
+        return node.name
     else:
-        print("START")
+        vc = visited_nodes.copy()
+        vc.append(node)
 
-    legal_nodes = [ln for ln in node.linked_nodes if ln != source_node and not(ln.is_small and ln in visited_nodes)]
-    if node.name != "end" and legal_nodes != []:
-        return [[name for name in [node.name, *[new_list]]]  for ln in legal_nodes for new_list in find_path(ln,node,visited_nodes)]
-    else:
-        visited_nodes = []
-        return [node.name]
+        legal_nodes = [ln for ln in node.linked_nodes if not(ln.is_small and ln in vc)]
+
+        if legal_nodes != []:
+            rc = []
+            vn = vc.copy()
+            for ln in legal_nodes:
+                paths = find_path(ln, node, vn)
+                if type(paths) == str:
+                    rc.append([node.name, paths])
+                else:
+                    for p in paths:
+                        rc.append([node.name, *p])
+
+            return rc
+        else:
+            return node.name
 
 nodes = []
 if __name__ == "__main__":
@@ -35,5 +43,15 @@ if __name__ == "__main__":
                 if existing_node.name == n:
                     existing_node.linked_nodes += [node for node in nodes if node.name == line_nodes[abs(i-1)]]
 
-    print(find_path(nodes[12], None, []))
+    for node in nodes:
+        print(node.name, [n.name for n in node.linked_nodes])
+
+    print()
+    print()
+
+    paths = [find_path(n, None, []) for n in nodes if n.name == "start"][0]
+    for p in [",".join(p) for p in paths if p[-1] == "end"]:
+        print(p)
+    print(len([p for p in paths if p[-1] == "end"]))
+
 
