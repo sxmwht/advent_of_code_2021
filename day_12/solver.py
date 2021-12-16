@@ -6,15 +6,14 @@ class node:
         self.is_small = name == name.lower()
         self.linked_nodes = []
 
-def find_path(node, source_node, visited_nodes, part):
+def find_path(node, visited_nodes, part):
     if node.name == "end":
         return node.name
     else:
         vc = visited_nodes.copy()
         vc.append(node)
 
-        legal_nodes = [ln for ln in node.linked_nodes if 
-                not ln.name == "start"]
+        legal_nodes = [ln for ln in node.linked_nodes if not ln.name == "start"]
 
         if legal_nodes != []:
             rc = []
@@ -35,7 +34,7 @@ def find_path(node, source_node, visited_nodes, part):
                         if been_to_a_small_node_twice:
                             continue
 
-                paths = find_path(ln, node, vn, part)
+                paths = find_path(ln, vn, part)
                 if type(paths) == str:
                     rc.append([node.name, paths])
                 else:
@@ -65,11 +64,11 @@ if __name__ == "__main__":
     print()
 
     # part 1
-    paths = [find_path(n, None, [], 1) for n in nodes if n.name == "start"][0]
+    paths = [find_path(n, [], 1) for n in nodes if n.name == "start"][0]
     print(len([p for p in paths if p[-1] == "end"]))
 
     # part 2
-    paths = [find_path(n, None, [], 2) for n in nodes if n.name == "start"][0]
+    paths = [find_path(n, [], 2) for n in nodes if n.name == "start"][0]
     print(len([p for p in paths if p[-1] == "end"]))
 
 
