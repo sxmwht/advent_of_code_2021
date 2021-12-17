@@ -51,11 +51,12 @@ def djikstra(grid, initial_node, end_node):
     heapq.heappush(q, (initial_node.shortest_path, hash(initial_node), initial_node))
     while not end_node.visited:
         _n, _h, smallest_node = heapq.heappop(q)
-        for n in smallest_node.adjacent_points:
+        for n in grid.get_adjacent_points(smallest_node):
             if n.visited == False:
-                n.shortest_path = min(n.shortest_path, smallest_node.shortest_path + n.risk)
-                if ((n.shortest_path, hash(n), n)) not in q:
-                    heapq.heappush(q, (n.shortest_path, hash(n), n))
+                new_dist = smallest_node.shortest_path + n.risk
+                if new_dist < n.shortest_path:
+                    n.shortest_path = new_dist
+                    heapq.heappush(q, (new_dist,  hash(n), n))
         smallest_node.visited = True
     return end_node.shortest_path
 
@@ -63,9 +64,8 @@ def djikstra(grid, initial_node, end_node):
 if __name__ == "__main__":
     input_data = [list(map(int, list(l))) for l in open("input.txt").read().splitlines()]
     cm = cave_map(input_data)
-    cm.get_all_adjacent_points()
 
-    print(djikstra(cm.contents, cm.contents[0][0], cm.contents[-1][-1]))
+    print(djikstra(cm, cm.contents[0][0], cm.contents[-1][-1]))
 
     large_map = []
     for y in range(5):
@@ -83,6 +83,5 @@ if __name__ == "__main__":
     #    large_map[i][0] = 0
 
     cm = cave_map(large_map)
-    cm.get_all_adjacent_points()
 
-    print(djikstra(cm.contents, cm.contents[0][0], cm.contents[-1][-1]))
+    print(djikstra(cm, cm.contents[0][0], cm.contents[-1][-1]))
